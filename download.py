@@ -10,6 +10,19 @@ import shutil
 import time
 import json
 
+class NCookie:
+    def __init__(self, auth, sess):
+        self._auth=auth
+        self._sess=sess
+
+class DCookie:
+    def __init__(self, hm_cu, hts, prof, ts, lsid):
+        self._hm_cu=hm_cu
+        self._hts=hts
+        self._prof=prof
+        self._ts=ts
+        self._lsid=lsid
+
 def log(str, lv=2):
     if lv>1:
         print(str)
@@ -172,34 +185,40 @@ def getImgNo(op, webtoonId, viewNo):
         imgNo.update({viewNo:len(js['data'])})
         return len(js['data'])
 
-def downImg(op, webtoonId, viewNo, cutNo):
+def downImg(op, webtoonId, viewNo, cutNo, cookie):
     if not 'imgUrl' in globals() or not viewNo in imgUrl:
         getImgNo(op, webtoonId, viewNo)
+    cookies=dict()
+    if cookie!=None:
+        if op=='naver':
+            cookies = {'NID_AUT': cookie._auth, 'NID_SES':cookie._sess}
+    else:
+        cookies=None
     headers = {'Referer': makeUrl(op, webtoonId, viewNo)}
     try:
-        image_file_data = requests.get(imgUrl[viewNo][cutNo], headers=headers).content
+        image_file_data = requests.get(imgUrl[viewNo][cutNo], headers=headers, cookies=cookies).content
     except:
         image_file_data=-1
     return image_file_data
 
-def downImgDaemon(op, webtoonId, viewNo, cutNo):
+def downImgDaemon(op, webtoonId, viewNo, cutNo, cookie):
     while True:
-        td=downImg(op, webtoonId, viewNo, cutNo)
+        td=downImg(op, webtoonId, viewNo, cutNo, cookie)
         if td==-1:
             time.sleep(0.5)
             continue
         return td
 
-def saveImg(op, webtoonId, viewNo, cutNo, saveName):
+def saveImg(op, webtoonId, viewNo, cutNo, saveName, cookie):
     with open(saveName,'wb') as out:
-        out.write(downImgDaemon(op, webtoonId, viewNo, cutNo))
+        out.write(downImgDaemon(op, webtoonId, viewNo, cutNo, cookie))
 
-def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cnt, qu, savedEpisode):
+def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cnt, qu, savedEpisode, cookie):
     for viewNo in range(start, finish+1):
         imgNo=getImgNo(op, webtoonId, viewNo)
         for i in range(modular, imgNo, divNo):
             imgName=os.path.join(saveDir, getWebtoonName(op, webtoonId)+"_"+str(viewNo)+"_"+str(i)+".png")
-            saveImg(op, webtoonId, viewNo, i, imgName)
+            saveImg(op, webtoonId, viewNo, i, imgName, cookie)
         cnt[viewNo]-=1
         if cnt[viewNo]==0:
             qu.put(viewNo)
@@ -211,7 +230,7 @@ def pathChk(saveDir):
         shutil.rmtree(os.path.join(saveDir, 'tmp'))
     os.makedirs(os.path.join(saveDir, 'tmp'))
 
-def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount=8, multiThreadMergingCount=8):
+def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount=8, multiThreadMergingCount=8, cookie=None):
     if op=='naver' or op=='nbest' or op=='nchall':
         webtoonId=int(webtoonId)
     thrs=list()
@@ -222,9 +241,9 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
     savedEpisode=Value('i', finish-start+1)
     for i in range(0, multiThreadCount):
         if mergeOption:
-            thr = Process(target=downPartialEpisode, args=(op, webtoonId, start, finish, os.path.join(saveDir, 'tmp'), multiThreadCount, i, cnt, qu, savedEpisode))
+            thr = Process(target=downPartialEpisode, args=(op, webtoonId, start, finish, os.path.join(saveDir, 'tmp'), multiThreadCount, i, cnt, qu, savedEpisode, cookie))
         else:
-            thr = Process(target=downPartialEpisode, args=(op, webtoonId, start, finish, saveDir, multiThreadCount, i, cnt, qu, savedEpisode))
+            thr = Process(target=downPartialEpisode, args=(op, webtoonId, start, finish, saveDir, multiThreadCount, i, cnt, qu, savedEpisode, cookie))
         thrs.append(thr)
         thr.start()
     if mergeOption:
@@ -272,7 +291,12 @@ def mergeImage(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo):
 if __name__=='__main__':
     freeze_support()
     pathChk(sys.argv[5])
-    downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], (sys.argv[6]=="1"), int(sys.argv[7]), int(sys.argv[8]))
+    if len(sys.argv) - 1>8:
+        if sys.argv[1]=='naver':
+            cookie=NCookie(sys.argv[9], sys.argv[10])
+    else:
+         cookie=None
+    downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], (sys.argv[6]=="1"), int(sys.argv[7]), int(sys.argv[8]), cookie)
     try:
         shutil.rmtree(os.path.join(sys.argv[5], 'tmp'))
     except:
