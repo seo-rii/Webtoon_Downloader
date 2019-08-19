@@ -88,18 +88,24 @@ def getWebtoonName(op, webtoonId):
                 webtoonName=webtoonId
         return webtoonName
 
-def getRawHtml(op, webtoonId, viewNo=0):
+def getRawHtml(op, webtoonId, cookie, viewNo=0):
+    cookies=dict()
+    if cookie!=None:
+        if op=='naver':
+            cookies = {'NID_AUT': cookie._auth, 'NID_SES':cookie._sess}
+    else:
+        cookies=None
     try:
-        t=requests.get(makeUrl(op, webtoonId, viewNo)).text
+        t=requests.get(makeUrl(op, webtoonId, viewNo), cookies=cookies).text
     except:
         t=-1
     return t
 
-def getRawHtmlDaemon(op, webtoonId, viewNo=0):
+def getRawHtmlDaemon(op, webtoonId, cookie, viewNo=0):
     if viewNo==-1:
         return -1
     while True:
-        td=getRawHtml(op, webtoonId, viewNo)
+        td=getRawHtml(op, webtoonId, cookie, viewNo)
         if td==-1:
             time.sleep(0.5)
             continue
@@ -112,14 +118,14 @@ def getRawEpisodeNo(html):
     except:
         return -1
 
-def getFinCode(op, webtoonId):
+def getFinCode(op, webtoonId, cookie):
     global fincode
     if 'fincode' in globals():
         return fincode
-    fincode=getRawEpisodeNo(getRawHtmlDaemon(op, webtoonId, 0))
+    fincode=getRawEpisodeNo(getRawHtmlDaemon(op, webtoonId, cookie, 0))
     return fincode
 
-def getHtml(op, webtoonId, viewNo):
+def getHtml(op, webtoonId, viewNo, cookie):
     global html
     global reIndex
     global htmlLst
@@ -129,8 +135,8 @@ def getHtml(op, webtoonId, viewNo):
         reIndex=[0]
     if op=='naver' or op=='nbest' or op=='nchall':
         for findFor in range(len(reIndex), viewNo+2):
-            for i in range(reIndex[findFor-1]+1, int(getFinCode(op, webtoonId))+2):
-                tmpHtml=getRawHtmlDaemon(op, webtoonId, i)
+            for i in range(reIndex[findFor-1]+1, int(getFinCode(op, webtoonId, cookie))+2):
+                tmpHtml=getRawHtmlDaemon(op, webtoonId, cookie, i)
                 if getRawEpisodeNo(tmpHtml)==str(i):
                     reIndex.append(i)
                     html.update({len(reIndex)-1:tmpHtml})
@@ -150,14 +156,14 @@ def getHtml(op, webtoonId, viewNo):
             lst.reverse()
             for i in lst:
                 try:
-                    t=getRawHtmlDaemon(op, i)
+                    t=getRawHtmlDaemon(op, i, cookie)
                 except:
                     t=-1
                 htmlLst.append(t)
         return htmlLst[int(viewNo)]
 
 
-def getImgNo(op, webtoonId, viewNo):
+def getImgNo(op, webtoonId, viewNo, cookie):
     global imgUrl
     global imgNo
     if not 'imgUrl' in globals():
@@ -165,9 +171,9 @@ def getImgNo(op, webtoonId, viewNo):
     if not 'imgNo' in globals():
         imgNo=dict()
     if (op=='naver' or op=='nbest' or op=='nchall') and (not 'html' in globals() or not viewNo in html):
-        getHtml(op, webtoonId, viewNo)
+        getHtml(op, webtoonId, viewNo, cookie)
     if (op=='daum') and (not 'htmlLst' in globals() or not viewNo in html):
-        getHtml(op, webtoonId, viewNo)
+        getHtml(op, webtoonId, viewNo, cookie)
     if op=='naver' or op=='nbest' or op=='nchall':
         soup = bs4(html[viewNo], 'html.parser')
         for img_tag in soup.select('.wt_viewer img'):
@@ -187,7 +193,7 @@ def getImgNo(op, webtoonId, viewNo):
 
 def downImg(op, webtoonId, viewNo, cutNo, cookie):
     if not 'imgUrl' in globals() or not viewNo in imgUrl:
-        getImgNo(op, webtoonId, viewNo)
+        getImgNo(op, webtoonId, viewNo, cookie)
     cookies=dict()
     if cookie!=None:
         if op=='naver':
@@ -215,7 +221,7 @@ def saveImg(op, webtoonId, viewNo, cutNo, saveName, cookie):
 
 def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cnt, qu, savedEpisode, cookie):
     for viewNo in range(start, finish+1):
-        imgNo=getImgNo(op, webtoonId, viewNo)
+        imgNo=getImgNo(op, webtoonId, viewNo, cookie)
         for i in range(modular, imgNo, divNo):
             imgName=os.path.join(saveDir, getWebtoonName(op, webtoonId)+"_"+str(viewNo)+"_"+str(i)+".png")
             saveImg(op, webtoonId, viewNo, i, imgName, cookie)
@@ -254,7 +260,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
             if not qu.empty() and runningThreadNo.value<multiThreadMergingCount:
                 targetEpisode=qu.get()
                 if not 'imgNo' in globals() or not targetEpisode in imgNo:
-                    getImgNo(op, webtoonId, targetEpisode)
+                    getImgNo(op, webtoonId, targetEpisode, cookie)
                 runningThreadNo.value+=1
                 thr = Process(target=mergeImage, args=(op, webtoonId, targetEpisode, imgNo[targetEpisode], saveDir, runningThreadNo))
                 thr.start()
