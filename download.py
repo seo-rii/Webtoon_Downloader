@@ -93,6 +93,8 @@ def getRawHtml(op, webtoonId, cookie, viewNo=0):
     if cookie!=None:
         if op=='naver':
             cookies = {'NID_AUT': cookie._auth, 'NID_SES':cookie._sess}
+        if op=='daum':
+            cookies = {'HM_CU': cookie._hm_cu, 'HTS':cookie._hts, 'PROF':cookie._prof, 'TS':cookie._ts, 'LSID':cookie._lsid}
     else:
         cookies=None
     try:
@@ -198,6 +200,8 @@ def downImg(op, webtoonId, viewNo, cutNo, cookie):
     if cookie!=None:
         if op=='naver':
             cookies = {'NID_AUT': cookie._auth, 'NID_SES':cookie._sess}
+        if op=='daum':
+            cookies = {'HM_CU': cookie._hm_cu, 'HTS':cookie._hts, 'PROF':cookie._prof, 'TS':cookie._ts, 'LSID':cookie._lsid}
     else:
         cookies=None
     headers = {'Referer': makeUrl(op, webtoonId, viewNo)}
@@ -300,6 +304,8 @@ if __name__=='__main__':
     if len(sys.argv) - 1>8:
         if sys.argv[1]=='naver':
             cookie=NCookie(sys.argv[9], sys.argv[10])
+        if sys.argv[1]=='daum':
+            cookie=DCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
     else:
          cookie=None
     downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], (sys.argv[6]=="1"), int(sys.argv[7]), int(sys.argv[8]), cookie)
