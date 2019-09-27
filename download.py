@@ -9,6 +9,7 @@ import sys
 import shutil
 import time
 import json
+from img2pdf import convert
 
 class NCookie:
     def __init__(self, auth, sess):
@@ -266,7 +267,10 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 if not 'imgNo' in globals() or not targetEpisode in imgNo:
                     getImgNo(op, webtoonId, targetEpisode, cookie)
                 runningThreadNo.value+=1
-                thr = Process(target=mergeImage, args=(op, webtoonId, targetEpisode, imgNo[targetEpisode], saveDir, runningThreadNo))
+                if mergeOption==1:
+                    thr = Process(target=mergeImage, args=(op, webtoonId, targetEpisode, imgNo[targetEpisode], saveDir, runningThreadNo))
+                if mergeOption==2:
+                    thr = Process(target=mergeImagePdf, args=(op, webtoonId, targetEpisode, imgNo[targetEpisode], saveDir, runningThreadNo))
                 thr.start()
                 thrs.append(thr)
                 leftEpisode-=1
@@ -297,6 +301,16 @@ def mergeImage(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo):
     log("m "+str(viewNo), 3)
     runningThreadNo.value-=1
 
+def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo):
+    pdf_list=[]
+    for i in range(0, cutNo):
+        pdf_list.append(os.path.join(savePath, "tmp", getWebtoonName(op, webtoonId)+"_"+str(viewNo)+"_"+str(i)+".png"))
+    pdf=convert(pdf_list)
+    with open(os.path.join(savePath, getWebtoonName(op, webtoonId)+"_"+str(viewNo)+'.pdf'), "wb") as f:
+        f.write(pdf)
+    log("m "+str(viewNo), 3)
+    runningThreadNo.value-=1
+
 
 if __name__=='__main__':
     freeze_support()
@@ -308,7 +322,7 @@ if __name__=='__main__':
             cookie=DCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
     else:
          cookie=None
-    downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], (sys.argv[6]=="1"), int(sys.argv[7]), int(sys.argv[8]), cookie)
+    downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], int(sys.argv[6]), int(sys.argv[7]), int(sys.argv[8]), cookie)
     try:
         shutil.rmtree(os.path.join(sys.argv[5], 'tmp'))
     except:
