@@ -9,6 +9,7 @@ branches:
 
 before_install:
   - choco install python --version 3.7.0
+  - python3 -m ensurepip
   - python -m pip install --upgrade pip
 
 install:
