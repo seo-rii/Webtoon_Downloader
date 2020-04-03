@@ -5,6 +5,9 @@
   
 Webtoon Downloader made with Python3
 
+## Download
+[Webtoon_Doanloader 2.2.1](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/2.2.1)
+
 ## Supported sites
 Naver
 - Supported types
