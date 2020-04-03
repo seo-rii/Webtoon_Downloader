@@ -23,3 +23,5 @@ Daum
 
 ## Usage
 webtoon-download.exe
+
+op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount, multiThreadMergingCount
