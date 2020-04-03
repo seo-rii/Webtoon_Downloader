@@ -38,18 +38,9 @@ def getImgNo(op, webtoonId, viewNo, cookie):
 def downImgWorker(op, webtoonId, viewNo, cutNo, cookie):
     if not viewNo in shared.imgUrl:
         getImgNo(op, webtoonId, viewNo, cookie)
-    cookies = dict()
-    if cookie != None:
-        if op == 'naver':
-            cookies = {'NID_AUT': cookie._auth, 'NID_SES': cookie._sess}
-        if op == 'daum':
-            cookies = {'HM_CU': cookie._hm_cu, 'HTS': cookie._hts, 'PROF': cookie._prof, 'TS': cookie._ts,
-                       'LSID': cookie._lsid}
-    else:
-        cookies = None
     headers = {'Referer': makeUrl(op, webtoonId, viewNo)}
     try:
-        image_file_data = requests.get(shared.imgUrl[viewNo][cutNo], headers=headers, cookies=cookies).content
+        image_file_data = requests.get(shared.imgUrl[viewNo][cutNo], headers=headers, cookies=cookie).content
     except:
         image_file_data = -1
     return image_file_data

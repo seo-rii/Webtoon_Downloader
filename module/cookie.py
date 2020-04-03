@@ -1,22 +1,25 @@
-class NCookie:
-    def __init__(self, auth, sess):
-        self._auth = auth
-        self._sess = sess
+def NCookie(auth, sess):
+    return {
+        'NID_AUT': auth,
+        'NID_SES': sess
+    }
 
 
-class DCookie:
-    def __init__(self, hm_cu, hts, prof, ts, lsid):
-        self._hm_cu = hm_cu
-        self._hts = hts
-        self._prof = prof
-        self._ts = ts
-        self._lsid = lsid
+def DCookie(hm_cu, hts, prof, ts, lsid):
+    return {
+        'HM_CU': hm_cu,
+        'HTS': hts,
+        'PROF': prof,
+        'TS': ts,
+        'LSID': lsid
+    }
 
 
-class KCookie:
-    def __init__(self, hm_cu, hts, prof, ts, lsid):
-        self._hm_cu = hm_cu
-        self._hts = hts
-        self._prof = prof
-        self._ts = ts
-        self._lsid = lsid
+def KCookie(hm_cu, hts, prof, ts, lsid):
+    return {
+        'HM_CU': hm_cu,
+        'HTS': hts,
+        'PROF': prof,
+        'TS': ts,
+        'LSID': lsid
+    }

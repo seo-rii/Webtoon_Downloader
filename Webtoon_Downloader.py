@@ -66,17 +66,11 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                     continue
                 runningThreadNo.value += 1
                 if mergeOption == 1:
-                    thr = Process(target=mergeImage,
-                                  args=(
-                                      op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir,
-                                      runningThreadNo,
-                                      cookie))
+                    thr = Process(target=mergeImage, args=(
+                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
                 if mergeOption == 2:
-                    thr = Process(target=mergeImagePdf,
-                                  args=(
-                                      op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir,
-                                      runningThreadNo,
-                                      cookie))
+                    thr = Process(target=mergeImagePdf, args=(
+                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
                 thr.start()
                 thrs.append(thr)
                 leftEpisode -= 1
@@ -87,6 +81,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
 if __name__ == '__main__':
     freeze_support()
     pathChk(sys.argv[5])
+    cookie = None
     if len(sys.argv) - 1 > 8:
         if sys.argv[1] == 'naver':
             cookie = Cookie.NCookie(sys.argv[9], sys.argv[10])
@@ -94,8 +89,6 @@ if __name__ == '__main__':
             cookie = Cookie.DCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
         if sys.argv[1] == 'kakao':
             cookie = Cookie.KCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
-    else:
-        cookie = None
     downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], int(sys.argv[6]),
                 int(sys.argv[7]), int(sys.argv[8]), cookie)
     try:

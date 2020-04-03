@@ -10,16 +10,8 @@ from module.makeurl import makeRootUrl, makeUrl
 
 
 def getRootHtmlWorker(op, webtoonId, cookie):
-    if cookie != None:
-        if op == 'naver':
-            cookies = {'NID_AUT': cookie._auth, 'NID_SES': cookie._sess}
-        if op == 'daum':
-            cookies = {'HM_CU': cookie._hm_cu, 'HTS': cookie._hts, 'PROF': cookie._prof, 'TS': cookie._ts,
-                       'LSID': cookie._lsid}
-    else:
-        cookies = None
     try:
-        t = requests.get(makeRootUrl(op, webtoonId), cookies=cookies).text
+        t = requests.get(makeRootUrl(op, webtoonId), cookies=cookie).text
     except:
         t = -1
     return t
@@ -38,17 +30,8 @@ def getRootHtml(op, webtoonId, cookie):
 
 
 def getRawHtmlWorker(op, webtoonId, cookie, viewNo=0):
-    cookies = dict()
-    if cookie != None:
-        if op == 'naver':
-            cookies = {'NID_AUT': cookie._auth, 'NID_SES': cookie._sess}
-        if op == 'daum':
-            cookies = {'HM_CU': cookie._hm_cu, 'HTS': cookie._hts, 'PROF': cookie._prof, 'TS': cookie._ts,
-                       'LSID': cookie._lsid}
-    else:
-        cookies = None
     try:
-        t = requests.get(makeUrl(op, webtoonId, viewNo), cookies=cookies).text
+        t = requests.get(makeUrl(op, webtoonId, viewNo), cookies=cookie).text
     except:
         t = -1
     return t
