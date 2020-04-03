@@ -1,8 +1,5 @@
 # .travis.yml
-language: python
-
-python:
-  - 3.7
+language: shell
 
 os: windows
 
@@ -10,8 +7,12 @@ branches:
   only:
     - master
 
+before_install:
+  - choco install python --version 3.7.0
+  - python -m pip install --upgrade pip
+
 install:
-  - pip install -r requirements.txt
+  - pip3 install -r requirements.txt
 
 script:
   - pyinstaller.exe --onefile --icon=icon.ico Webtoon_Downloader.py
