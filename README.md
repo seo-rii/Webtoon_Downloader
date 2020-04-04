@@ -27,6 +27,12 @@ Daum
     - Authorize Adult with Cookies
     - Authorize non-free webtoon with Cookies
 
+Kakao
+- Supported types
+    - Kakao Pages
+- Supported Function
+    - Authorize non-free webtoon with Cookies
+
 ## Usage
 
 webtoon-download.exe op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount, multiThreadMergingCount [, Cookie]
@@ -37,7 +43,7 @@ naver, nbest, nchall, daum, kakao
 Webtoon ID
     - naver, nbest, nchall
     6-digit number on webtoon URL
-    - daum, kakao
+    - daum, kakao  
     Specific string on webtoon URL
 - start  
 Start Episode No
@@ -56,7 +62,9 @@ Maximum Count of Merger Thread
 - Cookie  
 This parameter is Optional.  
 Important! Split with Space
-    - naver, nbest, nchall
+    - naver, nbest, nchall  
     NID_AUT, NID_SES
-    - daum
+    - daum  
     HM_CU, HTS, PROF, TS, LSID
+    - kakao  
+    HM_CU, HTS, PROF, TS, LSID, _kawIp, _kawIptea, _kawIt, _kawItea
