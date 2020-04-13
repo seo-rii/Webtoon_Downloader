@@ -80,7 +80,10 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
 
 if __name__ == '__main__':
     freeze_support()
-    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.0.0 by Seohyun Lee.')
+    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.1.0',
+                                     epilog="Copyright 2019-2020 Seohuyun Lee. " +
+                                            "This program is distributed under MIT license. " +
+                                            "Visit https://github.com/04SeoHyun/Webtoon_Downloader to get more information.")
     parser.add_argument('Type', type=str,
                         help='Webtoon provider. One of naver, nbest, nchall, daum, and kakao.',
                         choices=['naver', 'nbest', 'nchall', 'daum', 'kakao'])
