@@ -1,7 +1,6 @@
 import argparse
 import os
 import shutil
-import sys
 from multiprocessing import Process, freeze_support, Array, Queue, Value
 
 import module.cookie as Cookie
@@ -97,18 +96,27 @@ if __name__ == '__main__':
     parser.add_argument('cookie', type=str, nargs='*',
                         help='Cookie value to authorize while downloading Webtoon. Find document to get info.')
     args = parser.parse_args()
-    pathChk(sys.argv[5])
+    pathChk(args.Path)
     cookie = None
-    if len(sys.argv) - 1 > 8:
-        if sys.argv[1] == 'naver':
-            cookie = Cookie.NCookie(sys.argv[9], sys.argv[10])
-        if sys.argv[1] == 'daum':
-            cookie = Cookie.DCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
-        if sys.argv[1] == 'kakao':
-            cookie = Cookie.KCookie(sys.argv[9], sys.argv[10], sys.argv[11], sys.argv[12], sys.argv[13])
-    downWebtoon(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5], int(sys.argv[6]),
-                int(sys.argv[7]), int(sys.argv[8]), cookie)
     try:
-        shutil.rmtree(os.path.join(sys.argv[5], 'tmp'))
+        if args.Type == 'naver' or args.Type == 'nbest' or args.Type == 'nchall':
+            cookie = Cookie.NCookie(args.cookie[0], args.cookie[1])
+        if args.Type == 'daum':
+            cookie = Cookie.DCookie(args.cookie[0], args.cookie[1], args.cookie[2], args.cookie[3], args.cookie[4])
+        if args.Type == 'kakao':
+            cookie = Cookie.KCookie(args.cookie[0], args.cookie[1], args.cookie[2], args.cookie[3], args.cookie[4])
+    except:
+        pass
+
+    mergeOption = 0
+    if args.mergeAsPng:
+        mergeOption = 1
+    if args.mergeAsPdf:
+        mergeOption = 2
+
+    downWebtoon(args.Type, args.ID, args.start, args.finish, args.Path, mergeOption, args.downThreadNo,
+                args.mergeThreadNo, cookie)
+    try:
+        shutil.rmtree(os.path.join(args.Path, 'tmp'))
     except:
         pass
