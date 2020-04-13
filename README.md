@@ -8,7 +8,7 @@ Webtoon Downloader made with Python3
 
 ## Download
 
-[Webtoon_Doanloader 2.2.1](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/2.2.1)
+[Webtoon_Doanloader 3.0.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.0.0)
 
 ## Supported sites
 
