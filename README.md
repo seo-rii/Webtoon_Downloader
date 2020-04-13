@@ -2,7 +2,7 @@
 
 <img alt="logo" src="./logo.png" width="100" height="100">  
   
-[![Build Status](https://travis-ci.org/04SeoHyun/Webtoon_Downloader.svg?branch=master)](https://travis-ci.org/04SeoHyun/Webtoon_Downloader)  
+[![Build Status](https://travis-ci.com/04SeoHyun/Webtoon_Downloader.svg?branch=master)](https://travis-ci.com/04SeoHyun/Webtoon_Downloader)  
   
 Webtoon Downloader made with Python3
 
