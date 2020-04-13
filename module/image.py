@@ -1,7 +1,6 @@
 import json
-import time
-
 import requests
+import time
 from bs4 import BeautifulSoup as bs4
 
 import module.shared as shared
@@ -10,14 +9,14 @@ from module.makeurl import makeUrl
 
 
 def getImgNo(op, webtoonId, viewNo, cookie):
-    if (op == 'naver' or op == 'nbest' or op == 'nchall') and (not viewNo in shared.html):
+    if (op == 'naver' or op == 'nbest' or op == 'nchall') and (viewNo not in shared.html):
         getHtml(op, webtoonId, viewNo, cookie)
-    if (op == 'daum') and (not viewNo in shared.html):
+    if (op == 'daum') and (viewNo not in shared.html):
         getHtml(op, webtoonId, viewNo, cookie)
     if op == 'naver' or op == 'nbest' or op == 'nchall':
         soup = bs4(shared.html[viewNo], 'html.parser')
         for img_tag in soup.select('.wt_viewer img'):
-            if not viewNo in shared.imgUrl:
+            if viewNo not in shared.imgUrl:
                 shared.imgUrl.update({viewNo: list()})
             shared.imgUrl[viewNo].append(img_tag['src'])
         shared.imgNo.update({viewNo: len(soup.select('.wt_viewer img'))})
@@ -28,7 +27,7 @@ def getImgNo(op, webtoonId, viewNo, cookie):
             return 0
         js = json.loads(shared.htmlLst[viewNo])
         for img_tag in js['data']:
-            if not viewNo in shared.imgUrl:
+            if viewNo not in shared.imgUrl:
                 shared.imgUrl.update({viewNo: list()})
             shared.imgUrl[viewNo].append(img_tag['url'])
         shared.imgNo.update({viewNo: len(js['data'])})
@@ -36,7 +35,7 @@ def getImgNo(op, webtoonId, viewNo, cookie):
 
 
 def downImgWorker(op, webtoonId, viewNo, cutNo, cookie):
-    if not viewNo in shared.imgUrl:
+    if viewNo not in shared.imgUrl:
         getImgNo(op, webtoonId, viewNo, cookie)
     headers = {'Referer': makeUrl(op, webtoonId, viewNo)}
     try:

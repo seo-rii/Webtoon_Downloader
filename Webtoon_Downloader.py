@@ -58,7 +58,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 multiThreadCount = 0
             if not qu.empty() and runningThreadNo.value < multiThreadMergingCount:
                 targetEpisode = qu.get()
-                if not 'imgNo' in globals() or not targetEpisode in shared.imgNo:
+                if targetEpisode not in shared.imgNo:
                     getImgNo(op, webtoonId, targetEpisode, cookie)
                 if shared.imgNo[targetEpisode] == 0:
                     log("m " + str(targetEpisode), 3)
@@ -68,7 +68,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 if mergeOption == 1:
                     thr = Process(target=mergeImage, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
-                if mergeOption == 2:
+                else:
                     thr = Process(target=mergeImagePdf, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
                 thr.start()
