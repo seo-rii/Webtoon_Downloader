@@ -35,36 +35,44 @@ Kakao
 
 ## Usage
 
-webtoon-download.exe op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount, multiThreadMergingCount [, Cookie]
+Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] {naver,nbest,nchall,daum,kakao} ID Path [cookie [cookie ...]]
 
-- op  
-naver, nbest, nchall, daum, kakao
-- webtoonId  
-Webtoon ID
-    - naver, nbest, nchall
+
+positional arguments:  
+- {naver,nbest,nchall,daum,kakao}   
+    Webtoon provider.  
+- ID  
+    Webtoon ID.  
+    - naver, nbest, nchall  
     6-digit number on webtoon URL
     - daum, kakao  
     Specific string on webtoon URL
-- start  
-Start Episode No
-- finish  
-End Episode No
-- saveDir  
-Path to Save Results
-- mergeOption  
-    - 0.Do not Merge
-    - 1.Merge as Long PNG
-    - 2.Merge as PDF
-- multiThreadCount  
-Maximum Count of Downloader Thread
-- multiThreadMergingCount  
-Maximum Count of Merger Thread
-- Cookie  
-This parameter is Optional.  
-Important! Split with Space
+- Path  
+    Path to save Webtoon.  
+- cookie  
+    Cookie value to authorize while downloading Webtoon.
     - naver, nbest, nchall  
     NID_AUT, NID_SES
     - daum  
     HM_CU, HTS, PROF, TS, LSID
     - kakao  
     HM_CU, HTS, PROF, TS, LSID, _kawIp, _kawIptea, _kawIt, _kawItea
+
+optional arguments:
+- -h, --help  
+    show this help message and exit
+- -s START, --start START  
+    Episode Number to Start download.
+- -f FINISH, --finish FINISH  
+    Episode Number to Finish download.
+- --downThreadNo DOWNTHREADNO  
+    Thread Number to download Webtoon.  
+    Default value is 4.  
+- --mergeThreadNo MERGETHREADNO  
+    Thread Number to merge Webtoon.  
+    Default value is 4.  
+    
+- --mergeAsPng  
+    Merge Webtoon images into Long PNG File.  
+- --mergeAsPdf  
+    Merge Webtoon images into PDF File.  

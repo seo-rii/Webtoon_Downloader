@@ -1,3 +1,4 @@
+import argparse
 import os
 import shutil
 import sys
@@ -80,6 +81,22 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
 
 if __name__ == '__main__':
     freeze_support()
+    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.0.0 by Seohyun Lee.')
+    parser.add_argument('Type', type=str,
+                        help='Webtoon provider. One of naver, nbest, nchall, daum, and kakao.',
+                        choices=['naver', 'nbest', 'nchall', 'daum', 'kakao'])
+    parser.add_argument('ID', type=str, help='Webtoon ID.')
+    parser.add_argument("-s", "--start", type=int, required=True, help='Episode Number to Start download.')
+    parser.add_argument("-f", "--finish", type=int, required=True, help='Episode Number to Finish download.')
+    parser.add_argument("--downThreadNo", type=int, default=4, help='Thread Number to download Webtoon.')
+    parser.add_argument("--mergeThreadNo", type=int, default=4, help='Thread Number to merge Webtoon.')
+    merge = parser.add_mutually_exclusive_group()
+    merge.add_argument("--mergeAsPng", help='Thread Number to merge Webtoon.', action='store_true')
+    merge.add_argument("--mergeAsPdf", help='Thread Number to merge Webtoon.', action='store_true')
+    parser.add_argument('Path', type=str, help='Path to save Webtoon.')
+    parser.add_argument('cookie', type=str, nargs='*',
+                        help='Cookie value to authorize while downloading Webtoon. Find document to get info.')
+    args = parser.parse_args()
     pathChk(sys.argv[5])
     cookie = None
     if len(sys.argv) - 1 > 8:
