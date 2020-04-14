@@ -134,7 +134,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
 
 if __name__ == '__main__':
     freeze_support()
-    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.2.0',
+    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.3.0',
                                      epilog="Copyright 2019-2020 Seohuyun Lee. " +
                                             "This program is distributed under MIT license. " +
                                             "Visit https://github.com/04SeoHyun/Webtoon_Downloader to get more information.")
