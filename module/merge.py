@@ -7,17 +7,15 @@ from module.log import log
 from module.webtooninfo import getWebtoonName
 
 
-def mergeImage(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo, cookie):
+def mergeImage(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie):
     file_list = []
     size_y = []
     ti = Image.open(
-        os.path.join(savePath, "tmp",
-                     getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(0) + ".png"))
+        os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(0) + ".png"))
     nx = ti.size[0]
     ti.close()
     for i in range(0, cutNo):
-        file = os.path.join(savePath, "tmp",
-                            getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png")
+        file = os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png")
         image = Image.open(file)
         im = image.resize((nx, int(image.size[1] / image.size[0] * nx)))
         file_list.append(im)
@@ -35,12 +33,11 @@ def mergeImage(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo, cookie):
     runningThreadNo.value -= 1
 
 
-def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, runningThreadNo, cookie):
+def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie):
     pdf_list = []
     for i in range(0, cutNo):
         pdf_list.append(
-            os.path.join(savePath, "tmp",
-                         getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png"))
+            os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png"))
     pdf = convert(pdf_list)
     with open(os.path.join(savePath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + '.pdf'), "wb") as f:
         f.write(pdf)

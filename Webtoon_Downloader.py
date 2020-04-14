@@ -1,6 +1,6 @@
 import argparse
 import os
-import shutil
+import tempfile
 from multiprocessing import Process, freeze_support, Array, Queue, Value
 
 import module.cookie as Cookie
@@ -26,13 +26,15 @@ def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cn
 
 
 def pathChk(saveDir):
-    if os.path.isdir(os.path.join(saveDir, 'tmp')):
-        shutil.rmtree(os.path.join(saveDir, 'tmp'))
-    os.makedirs(os.path.join(saveDir, 'tmp'))
+    try:
+        os.makedirs(saveDir)
+    except:
+        pass
 
 
 def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount=8, multiThreadMergingCount=8,
                 cookie=None):
+    temp_dir = tempfile.TemporaryDirectory()
     if op == 'naver' or op == 'nbest' or op == 'nchall':
         webtoonId = int(webtoonId)
     thrs = list()
@@ -44,7 +46,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
     for i in range(0, multiThreadCount):
         if mergeOption:
             thr = Process(target=downPartialEpisode, args=(
-                op, webtoonId, start, finish, os.path.join(saveDir, 'tmp'), multiThreadCount, i, cnt, qu, savedEpisode,
+                op, webtoonId, start, finish, temp_dir.name, multiThreadCount, i, cnt, qu, savedEpisode,
                 cookie))
         else:
             thr = Process(target=downPartialEpisode, args=(
@@ -67,15 +69,19 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 runningThreadNo.value += 1
                 if mergeOption == 1:
                     thr = Process(target=mergeImage, args=(
-                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
+                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
+                        runningThreadNo, cookie))
                 else:
                     thr = Process(target=mergeImagePdf, args=(
-                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, runningThreadNo, cookie))
+                        op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
+                        runningThreadNo, cookie))
                 thr.start()
                 thrs.append(thr)
                 leftEpisode -= 1
     for i in thrs:
         i.join()
+
+    temp_dir.cleanup()
 
 
 if __name__ == '__main__':
@@ -119,7 +125,3 @@ if __name__ == '__main__':
 
     downWebtoon(args.Type, args.ID, args.start, args.finish, args.Path, mergeOption, args.downThreadNo,
                 args.mergeThreadNo, cookie)
-    try:
-        shutil.rmtree(os.path.join(args.Path, 'tmp'))
-    except:
-        pass
