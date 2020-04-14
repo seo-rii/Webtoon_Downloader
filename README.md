@@ -10,7 +10,14 @@ Webtoon Downloader made with Python3
 
 [Webtoon_Doanloader 3.3.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.3.0)
 
-## Supported sites
+## Features
+
+- Multi-processed
+- Various merging options
+- Supports authorization with cookie
+- Supports various sites(see below)
+
+### Supported sites
 
 Naver
 - Supported types
