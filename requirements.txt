@@ -4,3 +4,4 @@ Pillow
 img2pdf
 pyinstaller
 numpy
+tqdm

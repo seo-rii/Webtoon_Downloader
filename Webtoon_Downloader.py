@@ -3,6 +3,8 @@ import os
 import tempfile
 from multiprocessing import Process, freeze_support, Array, Queue, Value
 
+from tqdm import tqdm
+
 import module.cookie as Cookie
 import module.shared as shared
 from module.image import getImgNo, saveImg
@@ -11,7 +13,7 @@ from module.merge import mergeImage, mergeImagePdf
 from module.webtooninfo import getWebtoonName
 
 
-def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cnt, qu, savedEpisode, cookie):
+def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cnt, qu, savedEpisode, cookie, pbar):
     for viewNo in range(start, finish + 1):
         imgNo = getImgNo(op, webtoonId, viewNo, cookie)
         for i in range(modular, imgNo, divNo):
@@ -21,7 +23,8 @@ def downPartialEpisode(op, webtoonId, start, finish, saveDir, divNo, modular, cn
         cnt[viewNo] -= 1
         if cnt[viewNo] == 0:
             qu.put(viewNo)
-            log("d " + str(viewNo), 5)
+            if not pbar:
+                log("d " + str(viewNo), 5)
     savedEpisode.value -= 1
 
 
@@ -32,9 +35,22 @@ def pathChk(saveDir):
         pass
 
 
-def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadCount=8, multiThreadMergingCount=8,
+def clear():
+    os.system('cls')
+
+
+def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBar, multiThreadCount=8,
+                multiThreadMergingCount=8,
                 cookie=None):
     temp_dir = tempfile.TemporaryDirectory()
+    pbarD = None
+    pbarM = None
+    if not noProgressBar:
+        if mergeOption:
+            pbarD = tqdm(total=finish - start + 1, maxinterval=1, position=0, desc="Download")
+            pbarM = tqdm(total=finish - start + 1, maxinterval=1, position=1, desc="Merge")
+        else:
+            pbarD = tqdm(total=finish - start + 1, mininterval=0.01)
     if op == 'naver' or op == 'nbest' or op == 'nchall':
         webtoonId = int(webtoonId)
     thrs = list()
@@ -47,14 +63,24 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
         if mergeOption:
             thr = Process(target=downPartialEpisode, args=(
                 op, webtoonId, start, finish, temp_dir.name, multiThreadCount, i, cnt, qu, savedEpisode,
-                cookie))
+                cookie, not not pbarD))
         else:
             thr = Process(target=downPartialEpisode, args=(
-                op, webtoonId, start, finish, saveDir, multiThreadCount, i, cnt, qu, savedEpisode, cookie))
+                op, webtoonId, start, finish, saveDir, multiThreadCount, i, cnt, qu, savedEpisode, cookie,
+                not not pbarD))
         thrs.append(thr)
         thr.start()
     if mergeOption:
+        laRunningThreadNo = 0
         while leftEpisode > 0:
+            if laRunningThreadNo != runningThreadNo.value:
+                if not noProgressBar:
+                    clear()
+                    pbarM.update(laRunningThreadNo - runningThreadNo.value)
+                    clear()
+                    pbarD.refresh()
+                    pbarM.refresh()
+                laRunningThreadNo = runningThreadNo.value
             if savedEpisode.value == 0:
                 multiThreadMergingCount += multiThreadCount / 2
                 multiThreadCount = 0
@@ -63,10 +89,23 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 if targetEpisode not in shared.imgNo:
                     getImgNo(op, webtoonId, targetEpisode, cookie)
                 if shared.imgNo[targetEpisode] == 0:
-                    log("m " + str(targetEpisode), 3)
+                    if not noProgressBar:
+                        clear()
+                        pbarM.update(1)
+                        clear()
+                        pbarD.refresh()
+                        pbarM.refresh()
+                    else:
+                        log("m " + str(targetEpisode), 5)
                     leftEpisode -= 1
                     continue
                 runningThreadNo.value += 1
+                if not noProgressBar:
+                    clear()
+                    pbarD.update(1)
+                    clear()
+                    pbarD.refresh()
+                    pbarM.refresh()
                 if mergeOption == 1:
                     thr = Process(target=mergeImage, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
@@ -74,19 +113,28 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, multiThreadC
                 else:
                     thr = Process(target=mergeImagePdf, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
-                        runningThreadNo, cookie))
+                        runningThreadNo, cookie, noProgressBar))
                 thr.start()
                 thrs.append(thr)
+                laRunningThreadNo += 1
                 leftEpisode -= 1
     for i in thrs:
         i.join()
-
     temp_dir.cleanup()
+    if not noProgressBar:
+        clear()
+        pbarM.update(laRunningThreadNo - runningThreadNo.value)
+        clear()
+        pbarD.refresh()
+        pbarM.refresh()
+        clear()
+        pbarD.close()
+        pbarM.close()
 
 
 if __name__ == '__main__':
     freeze_support()
-    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.1.0',
+    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.2.0',
                                      epilog="Copyright 2019-2020 Seohuyun Lee. " +
                                             "This program is distributed under MIT license. " +
                                             "Visit https://github.com/04SeoHyun/Webtoon_Downloader to get more information.")
@@ -101,6 +149,7 @@ if __name__ == '__main__':
     merge = parser.add_mutually_exclusive_group()
     merge.add_argument("--mergeAsPng", help='Thread Number to merge Webtoon.', action='store_true')
     merge.add_argument("--mergeAsPdf", help='Thread Number to merge Webtoon.', action='store_true')
+    parser.add_argument("--noProgressBar", help='Do not beautify progress with tqdm.', action='store_true')
     parser.add_argument('Path', type=str, help='Path to save Webtoon.')
     parser.add_argument('cookie', type=str, nargs='*',
                         help='Cookie value to authorize while downloading Webtoon. Find document to get info.')
@@ -123,5 +172,5 @@ if __name__ == '__main__':
     if args.mergeAsPdf:
         mergeOption = 2
 
-    downWebtoon(args.Type, args.ID, args.start, args.finish, args.Path, mergeOption, args.downThreadNo,
-                args.mergeThreadNo, cookie)
+    downWebtoon(args.Type, args.ID, args.start, args.finish, args.Path, mergeOption, args.noProgressBar,
+                args.downThreadNo, args.mergeThreadNo, cookie)

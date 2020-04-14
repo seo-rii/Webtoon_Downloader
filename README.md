@@ -35,7 +35,7 @@ Kakao
 
 ## Usage
 
-Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] {naver,nbest,nchall,daum,kakao} ID Path [cookie [cookie ...]]
+Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] [--noProgressBar]  {naver,nbest,nchall,daum,kakao} ID Path [cookie [cookie ...]]
 
 
 positional arguments:  
@@ -76,3 +76,5 @@ optional arguments:
     Merge Webtoon images into Long PNG File.  
 - --mergeAsPdf  
     Merge Webtoon images into PDF File.  
+- --noProgressBar  
+    Do not beautify progress with tqdm.

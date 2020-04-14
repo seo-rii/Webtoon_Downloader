@@ -59,7 +59,7 @@ def alpha_composite(front, back):
     return result
 
 
-def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie):
+def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie, noProgressBar):
     pdf_list = []
     for i in range(0, cutNo):
         im = Image.open(
@@ -74,5 +74,6 @@ def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThread
     pdf = convert(pdf_list)
     with open(os.path.join(savePath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + '.pdf'), "wb") as f:
         f.write(pdf)
-    log("m " + str(viewNo), 3)
+    if noProgressBar:
+        log("m " + str(viewNo), 3)
     runningThreadNo.value -= 1
