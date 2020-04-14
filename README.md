@@ -1,6 +1,6 @@
 # Webtoon_Downloader
 
-<img alt="logo" src="./logo.png" width="100" height="100">  
+<img alt="logo" src="./logo.png" width="100">  
   
 [![Build Status](https://travis-ci.com/04SeoHyun/Webtoon_Downloader.svg?branch=master)](https://travis-ci.com/04SeoHyun/Webtoon_Downloader)  
   
@@ -8,7 +8,7 @@ Webtoon Downloader made with Python3
 
 ## Download
 
-[Webtoon_Doanloader 3.1.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.1.0)
+[Webtoon_Doanloader 3.2.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.2.0)
 
 ## Supported sites
 
