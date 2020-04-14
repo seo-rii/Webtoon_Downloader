@@ -74,14 +74,15 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
         laRunningThreadNo = 0
         while leftEpisode > 0:
             if laRunningThreadNo != runningThreadNo.value:
+                diff = laRunningThreadNo - runningThreadNo.value
                 if not noProgressBar:
                     clear()
-                    pbarM.update(laRunningThreadNo - runningThreadNo.value)
+                    pbarM.update(diff)
                     clear()
                     pbarD.refresh()
                     pbarM.refresh()
-                laRunningThreadNo = runningThreadNo.value
-            if savedEpisode.value == 0:
+                laRunningThreadNo -= diff
+            if savedEpisode.value == 0 and multiThreadCount:
                 multiThreadMergingCount += multiThreadCount / 2
                 multiThreadCount = 0
             if not qu.empty() and runningThreadNo.value < multiThreadMergingCount:
@@ -100,6 +101,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
                     leftEpisode -= 1
                     continue
                 runningThreadNo.value += 1
+                laRunningThreadNo += 1
                 if not noProgressBar:
                     clear()
                     pbarD.update(1)
@@ -116,17 +118,19 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
                         runningThreadNo, cookie, noProgressBar))
                 thr.start()
                 thrs.append(thr)
-                laRunningThreadNo += 1
                 leftEpisode -= 1
     for i in thrs:
         i.join()
     temp_dir.cleanup()
     if not noProgressBar:
-        clear()
-        pbarM.update(laRunningThreadNo - runningThreadNo.value)
-        clear()
-        pbarD.refresh()
-        pbarM.refresh()
+        diff = laRunningThreadNo - runningThreadNo.value
+        if not noProgressBar:
+            clear()
+            pbarM.update(diff)
+            clear()
+            pbarD.refresh()
+            pbarM.refresh()
+        laRunningThreadNo -= diff
         clear()
         pbarD.close()
         pbarM.close()
@@ -134,7 +138,7 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
 
 if __name__ == '__main__':
     freeze_support()
-    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.3.0',
+    parser = argparse.ArgumentParser(description='Webtoon Downloader 3.3.1',
                                      epilog="Copyright 2019-2020 Seohuyun Lee. " +
                                             "This program is distributed under MIT license. " +
                                             "Visit https://github.com/04SeoHyun/Webtoon_Downloader to get more information.")
