@@ -111,11 +111,11 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
                 if mergeOption == 1:
                     thr = Process(target=mergeImage, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
-                        runningThreadNo, cookie))
+                        runningThreadNo, cookie, len(str(finish))))
                 else:
                     thr = Process(target=mergeImagePdf, args=(
                         op, webtoonId, targetEpisode, shared.imgNo[targetEpisode], saveDir, temp_dir.name,
-                        runningThreadNo, cookie, noProgressBar))
+                        runningThreadNo, cookie, noProgressBar, len(str(finish))))
                 thr.start()
                 thrs.append(thr)
                 leftEpisode -= 1

@@ -8,15 +8,15 @@ from module.log import log
 from module.webtooninfo import getWebtoonName
 
 
-def mergeImage(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie):
+def mergeImage(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie, digits):
     file_list = []
     size_y = []
     ti = Image.open(
-        os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(0) + ".png"))
+        os.path.join(tmpPath, "%s_%s_0.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo))))
     nx = ti.size[0]
     ti.close()
     for i in range(0, cutNo):
-        file = os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png")
+        file = os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i))
         image = Image.open(file)
         im = image.resize((nx, int(image.size[1] / image.size[0] * nx)))
         file_list.append(im)
@@ -29,7 +29,8 @@ def mergeImage(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo,
         area = (0, sumY, nx, size_y[idx] + sumY)
         canv.paste(file_list[idx], area)
         sumY = sumY + size_y[idx]
-    canv.save(os.path.join(savePath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + '.png'), 'PNG')
+    canv.save(os.path.join(savePath, "%%s_%%0%dd.png" % digits % (getWebtoonName(op, webtoonId, cookie), viewNo)),
+              'PNG')
     log("m " + str(viewNo), 3)
     runningThreadNo.value -= 1
 
@@ -59,20 +60,18 @@ def alpha_composite(front, back):
     return result
 
 
-def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie, noProgressBar):
+def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie, noProgressBar, digits):
     pdf_list = []
     for i in range(0, cutNo):
-        im = Image.open(
-            os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png"))
+        im = Image.open(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
         if len(im.getbands()) == 4:
             back = Image.new('RGBA', size=im.size, color=(255, 255, 255) + (255,))
             im = alpha_composite(im, back).convert('RGB')
-            im.save(os.path.join(tmpPath,
-                                 getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png"))
-        pdf_list.append(
-            os.path.join(tmpPath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + "_" + str(i) + ".png"))
+            im.save(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
+        pdf_list.append(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
     pdf = convert(pdf_list)
-    with open(os.path.join(savePath, getWebtoonName(op, webtoonId, cookie) + "_" + str(viewNo) + '.pdf'), "wb") as f:
+    with open(os.path.join(savePath, "%%s_%%0%dd.pdf" % digits % (getWebtoonName(op, webtoonId, cookie), viewNo)),
+              "wb") as f:
         f.write(pdf)
     if noProgressBar:
         log("m " + str(viewNo), 3)
