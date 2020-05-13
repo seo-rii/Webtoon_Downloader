@@ -80,6 +80,7 @@ def getHtml(op, webtoonId, viewNo, cookie):
                 except:
                     t = -1
                 shared.htmlLst.append(t)
+            shared.htmlLst.reverse()
         return shared.htmlLst[int(viewNo)]
 
 

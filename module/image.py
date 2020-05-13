@@ -1,6 +1,7 @@
 import json
-import requests
 import time
+
+import requests
 from bs4 import BeautifulSoup as bs4
 
 import module.shared as shared
@@ -9,9 +10,7 @@ from module.makeurl import makeUrl
 
 
 def getImgNo(op, webtoonId, viewNo, cookie):
-    if (op == 'naver' or op == 'nbest' or op == 'nchall') and (viewNo not in shared.html):
-        getHtml(op, webtoonId, viewNo, cookie)
-    if (op == 'daum') and (viewNo not in shared.html):
+    if (op == 'naver' or op == 'nbest' or op == 'nchall' or op == 'daum') and (viewNo not in shared.html):
         getHtml(op, webtoonId, viewNo, cookie)
     if op == 'naver' or op == 'nbest' or op == 'nchall':
         soup = bs4(shared.html[viewNo], 'html.parser')
