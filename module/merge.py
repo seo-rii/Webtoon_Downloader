@@ -63,12 +63,19 @@ def alpha_composite(front, back):
 def mergeImagePdf(op, webtoonId, viewNo, cutNo, savePath, tmpPath, runningThreadNo, cookie, noProgressBar, digits):
     pdf_list = []
     for i in range(0, cutNo):
-        im = Image.open(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
-        if len(im.getbands()) == 4:
-            back = Image.new('RGBA', size=im.size, color=(255, 255, 255) + (255,))
-            im = alpha_composite(im, back).convert('RGB')
-            im.save(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
-        pdf_list.append(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
+        try:
+            im = Image.open(
+                os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
+            if im.getbands() != ('R', 'G', 'B'):
+                im = im.convert('RGBA')
+            if len(im.getbands()) == 4:
+                back = Image.new('RGBA', size=im.size, color=(255, 255, 255) + (255,))
+                im = alpha_composite(im, back).convert('RGB')
+                im.save(os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
+            pdf_list.append(
+                os.path.join(tmpPath, "%s_%s_%d.png" % (getWebtoonName(op, webtoonId, cookie), str(viewNo), i)))
+        except:
+            pass
     pdf = convert(pdf_list)
     with open(os.path.join(savePath, "%%s_%%0%dd.pdf" % digits % (getWebtoonName(op, webtoonId, cookie), viewNo)),
               "wb") as f:

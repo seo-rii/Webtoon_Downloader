@@ -65,12 +65,15 @@ def getHtml(op, webtoonId, viewNo, cookie):
             js = json.loads(t)
             webtoonLinks = js['data']['webtoon']['webtoonEpisodes']
             lst = list()
+            if js['data']['webtoon']['sort'] == 'asc':
+                lst.append(-1)
             for i in webtoonLinks:
                 if i['serviceType'] == 'free' or i['isPaid']:
                     lst.append(i['articleId'])
                 else:
                     lst.append(-1)
-            lst.append(-1)
+            if js['data']['webtoon']['sort'] == 'desc':
+                lst.append(-1)
             for i in lst:
                 if i == -1:
                     shared.htmlLst.append(-1)
@@ -80,7 +83,8 @@ def getHtml(op, webtoonId, viewNo, cookie):
                 except:
                     t = -1
                 shared.htmlLst.append(t)
-            shared.htmlLst.reverse()
+            if js['data']['webtoon']['sort'] == 'desc':
+                shared.htmlLst.reverse()
         return shared.htmlLst[int(viewNo)]
 
 
