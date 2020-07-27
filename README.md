@@ -2,13 +2,13 @@
 
 <img alt="logo" src="./logo.png" width="100">  
   
-[![Build Status](https://travis-ci.com/04SeoHyun/Webtoon_Downloader.svg?branch=master)](https://travis-ci.com/04SeoHyun/Webtoon_Downloader)  
+[![Build Status](https://travis-ci.com/Seo-Rii/Webtoon_Downloader.svg?branch=master)](https://travis-ci.com/Seo-Rii/Webtoon_Downloader)  
   
 Webtoon Downloader made with Python3
 
 ## Download
 
-[Webtoon_Doanloader 3.3.1](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.3.1)
+[Webtoon_Doanloader 3.3.4](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.3.4)
 
 ## Features
 
@@ -19,7 +19,7 @@ Webtoon Downloader made with Python3
 
 ### Supported sites
 
-Naver
+Naver Webtoon
 - Supported types
     - Naver Webtoon(정식연재)
     - Best Challenge(베스트 도전)
@@ -27,7 +27,7 @@ Naver
 - Supported Function
     - Authorize Adult with Cookies
 
-Daum
+Daum Webtoon
 - Supported types
     - Daum Webtoon
 - Supported Function
@@ -36,7 +36,7 @@ Daum
 
 ### Coming Soon
 
-Kakao
+Kakao Pages
 - Supported types
     - Kakao Pages
 - Supported Function
@@ -53,8 +53,14 @@ Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--m
 
 
 positional arguments:  
-- {naver,nbest,nchall,daum,kakao}   
+- {naver,nbest,nchall,daum,kakao,webtoon}   
     Webtoon provider.  
+    - naver : Naver Webtoon
+    - nbest : Naver Best Challange
+    - nchall : Naver Challange
+    - daum : Daum Webtoon
+    - kakao : Kakao Pages
+    - webtoon : Webtoons.com
 - ID  
     Webtoon ID.  
     - naver, nbest, nchall  
