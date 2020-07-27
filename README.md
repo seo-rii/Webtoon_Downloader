@@ -34,11 +34,18 @@ Daum
     - Authorize Adult with Cookies
     - Authorize non-free webtoon with Cookies
 
+### Coming Soon
+
 Kakao
 - Supported types
     - Kakao Pages
 - Supported Function
     - Authorize non-free webtoon with Cookies
+
+Webtoon(Webtoons.com)
+- Supported types
+    - Official Webtoon(Weekly Uploaded)
+    - Canvas(Challenge)
 
 ## Usage
 
