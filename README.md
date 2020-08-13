@@ -24,6 +24,8 @@ Naver Webtoon
     - Naver Webtoon(정식연재)
     - Best Challenge(베스트 도전)
     - Challenge(도전만화)
+    - Common webtoon
+    - Cuttoons
 - Supported Function
     - Authorize Adult with Cookies
 
@@ -35,6 +37,10 @@ Daum Webtoon
     - Authorize non-free webtoon with Cookies
 
 ### Coming Soon
+
+Naver Webtoon
+ - Supported types
+    - Scroll toon(effect while scrolling)
 
 Kakao Pages
 - Supported types
