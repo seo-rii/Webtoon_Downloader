@@ -8,7 +8,7 @@ Webtoon Downloader made with Python3
 
 ## Download
 
-[Webtoon_Doanloader 3.3.4](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.3.4)
+[Webtoon_Doanloader 3.4.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.4.0)
 
 ## Features
 
@@ -36,6 +36,10 @@ Daum Webtoon
     - Authorize Adult with Cookies
     - Authorize non-free webtoon with Cookies
 
+Kakao Pages(Beta)
+- Supported types
+    - Kakao Pages Webtoon
+
 ### Coming Soon
 
 Naver Webtoon
@@ -43,8 +47,6 @@ Naver Webtoon
     - Scroll toon(effect while scrolling)
 
 Kakao Pages
-- Supported types
-    - Kakao Pages
 - Supported Function
     - Authorize non-free webtoon with Cookies
 
