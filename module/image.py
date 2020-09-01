@@ -10,7 +10,8 @@ from module.makeurl import makeUrl
 
 
 def getImgNo(op, webtoonId, viewNo, cookie):
-    if (op == 'naver' or op == 'nbest' or op == 'nchall' or op == 'daum') and (viewNo not in shared.html):
+    if (op == 'naver' or op == 'nbest' or op == 'nchall' or op == 'daum' or op == 'kakao') and (
+            viewNo not in shared.html):
         getHtml(op, webtoonId, viewNo, cookie)
     if op == 'naver' or op == 'nbest' or op == 'nchall':
         soup = bs4(shared.html[viewNo], 'html.parser')
@@ -31,6 +32,22 @@ def getImgNo(op, webtoonId, viewNo, cookie):
             shared.imgUrl[viewNo].append(img_tag['url'])
         shared.imgNo.update({viewNo: len(js['data'])})
         return len(js['data'])
+    if op == 'kakao':
+        if shared.htmlLst[viewNo] == -1:
+            shared.imgNo.update({viewNo: 0})
+            return 0
+        js = json.loads(shared.htmlLst[viewNo])
+        try:
+            for img_tag in js['downloadData']['members']['files']:
+                if viewNo not in shared.imgUrl:
+                    shared.imgUrl.update({viewNo: list()})
+                shared.imgUrl[viewNo].append(
+                    "https://page-edge.kakao.com/sdownload/resource?kid=" + img_tag['secureUrl'])
+            shared.imgNo.update({viewNo: len(js['downloadData']['members']['files'])})
+            return len(js['downloadData']['members']['files'])
+        except:
+            shared.imgNo.update({viewNo: 0})
+            return 0
 
 
 def downImgWorker(op, webtoonId, viewNo, cutNo, cookie):

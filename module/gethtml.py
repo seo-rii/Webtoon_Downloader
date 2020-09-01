@@ -9,20 +9,16 @@ import module.shared as shared
 from module.makeurl import makeRootUrl, makeUrl
 
 
-def getRootHtmlWorker(op, webtoonId, cookie):
-    try:
-        t = requests.get(makeRootUrl(op, webtoonId), cookies=cookie).text
-    except:
-        t = -1
-    return t
-
-
 def getRootHtml(op, webtoonId, cookie):
     if shared.rootHtml != None:
         return shared.rootHtml
     while True:
-        td = getRootHtmlWorker(op, webtoonId, cookie)
-        if td == -1:
+        try:
+            if op == 'kakao':
+                td = requests.post(makeRootUrl(op, webtoonId), cookies=cookie).text
+            else:
+                td = requests.get(makeRootUrl(op, webtoonId), cookies=cookie).text
+        except:
             time.sleep(0.5)
             continue
         shared.rootHtml = td
@@ -31,7 +27,10 @@ def getRootHtml(op, webtoonId, cookie):
 
 def getRawHtmlWorker(op, webtoonId, cookie, viewNo=0):
     try:
-        t = requests.get(makeUrl(op, webtoonId, viewNo), cookies=cookie).text
+        if op == 'kakao':
+            t = requests.post(makeUrl(op, webtoonId, viewNo), cookies=cookie).text
+        else:
+            t = requests.get(makeUrl(op, webtoonId, viewNo), cookies=cookie).text
     except:
         t = -1
     return t
@@ -85,6 +84,26 @@ def getHtml(op, webtoonId, viewNo, cookie):
                 shared.htmlLst.append(t)
             if js['data']['webtoon']['sort'] == 'desc':
                 shared.htmlLst.reverse()
+        return shared.htmlLst[int(viewNo)]
+    if op == 'kakao':
+        if shared.htmlLst == None:
+            shared.htmlLst = list()
+            t = getRootHtml(op, webtoonId, cookie)
+            js = json.loads(t)
+            webtoonLinks = js['singles']
+            lst = list()
+            lst.append(-1)
+            for i in webtoonLinks:
+                lst.append(i['id'])
+            for i in lst:
+                if i == -1:
+                    shared.htmlLst.append(-1)
+                    continue
+                try:
+                    t = getRawHtml(op, i, cookie)
+                except:
+                    t = -1
+                shared.htmlLst.append(t)
         return shared.htmlLst[int(viewNo)]
 
 
