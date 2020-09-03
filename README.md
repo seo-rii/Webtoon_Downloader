@@ -9,8 +9,13 @@
 파이썬으로 만든 멀티프로세스 활용 웹툰 다운로더입니다!
 
 ## 다운받기
+
+CLI를 모른다고요? 그래서 GUI(그래픽 인터페이스)도 개발했어요!  
+[Seo-Rii/Webtoon_Downloader_UI](https://github.com/Seo-Rii/Webtoon_Downloader_UI)  
+
+
+CLI 버전(콘솔을 쓸 줄 모른다면 위의 파일을 받아주세요!)  
 [Webtoon_Doanloader 3.4.0](https://github.com/04SeoHyun/Webtoon_Downloader/releases/tag/3.4.0)  
-GUI는 현재 개발중이에요!
 
 ## 특징
 - 멀티프로세스 활용
