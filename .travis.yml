@@ -17,7 +17,7 @@ install:
   - pip3 install -r requirements.txt
 
 script:
-  - pyinstaller.exe --onefile --icon=logo.ico Webtoon_Downloader.py
+  - pyinstaller.exe --onefile --icon=logo.ico --hidden-import=pikepdf._cpphelpers Webtoon_Downloader.py
 
 deploy:
   provider: releases
