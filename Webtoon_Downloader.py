@@ -70,8 +70,8 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
                 not not pbarD))
         thrs.append(thr)
         thr.start()
+    laRunningThreadNo = 0
     if mergeOption:
-        laRunningThreadNo = 0
         while leftEpisode > 0:
             if laRunningThreadNo != runningThreadNo.value:
                 diff = laRunningThreadNo - runningThreadNo.value
