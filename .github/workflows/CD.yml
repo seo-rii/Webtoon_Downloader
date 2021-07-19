@@ -27,7 +27,8 @@ jobs:
     - name: Build
       run: pyinstaller --icon logo.ico Webtoon_Downloader.py --onefile
       
-    - uses: "marvinpinto/action-automatic-releases@latest"
+    - name: Release
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GH_TOKEN }}"
         automatic_release_tag: "latest"
