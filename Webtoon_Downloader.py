@@ -122,18 +122,21 @@ def downWebtoon(op, webtoonId, start, finish, saveDir, mergeOption, noProgressBa
     for i in thrs:
         i.join()
     temp_dir.cleanup()
-    if not noProgressBar:
-        diff = laRunningThreadNo - runningThreadNo.value
+    try:
         if not noProgressBar:
+            diff = laRunningThreadNo - runningThreadNo.value
+            if not noProgressBar:
+                clear()
+                pbarM.update(diff)
+                clear()
+                pbarD.refresh()
+                pbarM.refresh()
+            laRunningThreadNo -= diff
             clear()
-            pbarM.update(diff)
-            clear()
-            pbarD.refresh()
-            pbarM.refresh()
-        laRunningThreadNo -= diff
-        clear()
-        pbarD.close()
-        pbarM.close()
+            pbarD.close()
+            pbarM.close()
+    except:
+        pass
 
 
 if __name__ == '__main__':
