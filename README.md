@@ -2,7 +2,7 @@
 
 <img alt="logo" src="./logo.png" width="100">  
   
-[![Build Status](https://travis-ci.com/Seo-Rii/Webtoon_Downloader.svg?branch=master)](https://travis-ci.com/Seo-Rii/Webtoon_Downloader) 
+[![CD](https://github.com/Seo-Rii/Webtoon_Downloader/actions/workflows/CD.yml/badge.svg)](https://github.com/Seo-Rii/Webtoon_Downloader/actions/workflows/CD.yml)
 
 **English descryption is below.**  
 
