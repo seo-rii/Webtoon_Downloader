@@ -41,16 +41,16 @@ Webtoon(라인 웹툰)
 
 ## 사용법
 
-Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] [--noProgressBar]  {naver,nbest,nchall,daum,kakao} ID Path [cookie [cookie ...]]
+Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] [--noProgressBar]  {naver,nbest,nchall,kakao} ID Path [cookie [cookie ...]]
 
 
 필수 옵션:  
-- {naver,nbest,nchall,daum,kakao,webtoon}   
+- {naver,nbest,nchall,kakao,webtoon}   
     웹툰 플랫폼  
     - naver : 네이버 웹툰
     - nbest : 네이버 베도
     - nchall : 네이버 도전만화
-    - daum : 다음 웹툰
+    - ~~daum : 다음 웹툰~~ 카카오웹툰의 DRM 적용으로 지원이 불가능합니다. (현행법상 DRM을 임의로 무력화하는 행위는 불법입니다.)
     - kakao : 카카오페이지
     - webtoon : 라인 웹툰
 - ID  
@@ -115,12 +115,9 @@ Naver Webtoon
 - Supported Function
     - Authorize Adult with Cookies
 
-Daum Webtoon
-- Supported types
-    - Daum Webtoon
-- Supported Function
-    - Authorize Adult with Cookies
-    - Authorize non-free webtoon with Cookies
+~~Daum Webtoon~~
+ - As the Kakao page is renewed, DRM is applied to the image and is no longer supported.  
+   (Under Korean law, attempts to lift DRM in an abnormal way are illegal.)
 
 Kakao Pages(Beta)
 - Supported types
@@ -143,11 +140,11 @@ Webtoon(Webtoons.com)
 
 ## Usage
 
-Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] [--noProgressBar]  {naver,nbest,nchall,daum,kakao} ID Path [cookie [cookie ...]]
+Webtoon_Downloader.py [-h] -s START -f FINISH [--downThreadNo DOWNTHREADNO] [--mergeThreadNo MERGETHREADNO] [--mergeAsPng | --mergeAsPdf] [--noProgressBar]  {naver,nbest,nchall,kakao} ID Path [cookie [cookie ...]]
 
 
 positional arguments:  
-- {naver,nbest,nchall,daum,kakao,webtoon}   
+- {naver,nbest,nchall,kakao,webtoon}   
     Webtoon provider.  
     - naver : Naver Webtoon
     - nbest : Naver Best Challange

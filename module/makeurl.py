@@ -21,4 +21,4 @@ def makeRootUrl(op, webtoonId):
     if op == 'daum':
         return "http://webtoon.daum.net/data/pc/webtoon/view/" + str(webtoonId)
     if op == 'kakao':
-        return "https://api2-page.kakao.com/api/v5/store/singles?seriesid=%s&page_size=50000" % webtoonId
+        return "https://api2-page.kakao.com/api/v5/store/get/single?singleid=%s" % webtoonId

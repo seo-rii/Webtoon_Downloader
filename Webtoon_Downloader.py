@@ -147,7 +147,7 @@ if __name__ == '__main__':
                                             "Visit https://github.com/Seo-Rii/Webtoon_Downloader to get more information.")
     parser.add_argument('Type', type=str,
                         help='Webtoon provider. One of naver, nbest, nchall, daum, and kakao.',
-                        choices=['naver', 'nbest', 'nchall', 'daum', 'kakao'])
+                        choices=['naver', 'nbest', 'nchall', 'kakao'])
     parser.add_argument('ID', type=str, help='Webtoon ID.')
     parser.add_argument("-s", "--start", type=int, required=True, help='Episode Number to Start download.')
     parser.add_argument("-f", "--finish", type=int, required=True, help='Episode Number to Finish download.')
@@ -166,8 +166,6 @@ if __name__ == '__main__':
     try:
         if args.Type == 'naver' or args.Type == 'nbest' or args.Type == 'nchall':
             cookie = Cookie.NCookie(args.cookie[0], args.cookie[1])
-        if args.Type == 'daum':
-            cookie = Cookie.DCookie(args.cookie[0], args.cookie[1], args.cookie[2], args.cookie[3], args.cookie[4])
         if args.Type == 'kakao':
             cookie = Cookie.KCookie(args.cookie[0], args.cookie[1], args.cookie[2], args.cookie[3], args.cookie[4])
     except:
